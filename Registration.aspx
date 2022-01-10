@@ -58,8 +58,23 @@
 
             <div class="form-group">
                 <div class="col-sm-10">
+                    <asp:Label Text="NRIC:" runat="server" for="tb_nric" Width="150px"/>
+                    <asp:TextBox ID="tb_nric" runat="server" Width="200px"/>
+                </div>
+            </div>
+
+            <asp:Label Text=" " ID="lbl_nricchecker" runat="server" />
+
+            <div class="form-group">
+                <div class="col-sm-10">
                     <asp:Label Text="Date of Birth:" runat="server" for="tb_dob" Width="150px"/>
                     <asp:TextBox ID="tb_dob" runat="server" TextMode="Date" Width="200px"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <asp:Label Text="Mobile no.:" runat="server" for="tb_mobile" Width="150px"/>
+                    <asp:TextBox ID="tb_mobile" runat="server" Width="200px"/>
                 </div>
             </div>
         </fieldset>
@@ -75,8 +90,17 @@
             <div class="form-group">
                 <div class="col-sm-10">
                     <asp:Label Text="Card CV & Expiry" runat="server" Width="150px"/>
-                    <asp:TextBox ID="tb_cardcv" runat="server" Width="80px" placeholder="000"/>
+                    <asp:TextBox ID="tb_cardcv" runat="server" Width="80px" TextMode="Number" placeholder="000"/>
                     <asp:TextBox ID="tb_cardexpiry" runat="server" Width="112px" TextMode="Date" placeholder="MM/YY"/>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Profile picture</legend>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <asp:Label Text="Photo" runat="server" for="tb_photo" Width="150px"/>
+                    <input type="file" name="tb_photo" id="tb_photo" value="" />
                 </div>
             </div>
         </fieldset>

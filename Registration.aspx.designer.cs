@@ -69,6 +69,24 @@ namespace IT2163_ApplicationSecurityAssignment
         protected global::System.Web.UI.WebControls.Label lbl_pwdchecker;
 
         /// <summary>
+        /// tb_nric control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tb_nric;
+
+        /// <summary>
+        /// lbl_nricchecker control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_nricchecker;
+
+        /// <summary>
         /// tb_dob control.
         /// </summary>
         /// <remarks>
@@ -76,6 +94,15 @@ namespace IT2163_ApplicationSecurityAssignment
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tb_dob;
+
+        /// <summary>
+        /// tb_mobile control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tb_mobile;
 
         /// <summary>
         /// tb_cardnumber control.
