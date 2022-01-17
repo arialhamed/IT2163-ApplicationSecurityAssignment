@@ -127,6 +127,8 @@ namespace IT2163_ApplicationSecurityAssignment
                         {
                             cmd.CommandType = CommandType.Text;
                             cmd.Parameters.AddWithValue("@Email", tb_email.Text.Trim());
+                            cmd.Parameters.AddWithValue("@FirstName", tb_firstName);
+                            cmd.Parameters.AddWithValue("@LastName", tb_lastName);
                             cmd.Parameters.AddWithValue("@Mobile", tb_mobile.Text.Trim());
                             cmd.Parameters.AddWithValue("@Nric", Convert.ToBase64String(encryptData(tb_nric.Text.Trim())));
                             cmd.Parameters.AddWithValue("@PasswordHash", finalHash);
@@ -136,6 +138,12 @@ namespace IT2163_ApplicationSecurityAssignment
                             cmd.Parameters.AddWithValue("@EmailVerified", DBNull.Value);
                             cmd.Parameters.AddWithValue("@IV", Convert.ToBase64String(IV));
                             cmd.Parameters.AddWithValue("@Key", Convert.ToBase64String(Key));
+                            cmd.Parameters.AddWithValue("@DOB", tb_dob.Text.Trim());
+                            cmd.Parameters.AddWithValue("@CardNumber", Convert.ToBase64String(encryptData(tb_cardnumber.Text.Trim())));
+                            cmd.Parameters.AddWithValue("@CardCV", Convert.ToBase64String(encryptData(tb_cardcv.Text.Trim())));
+                            cmd.Parameters.AddWithValue("@CardExpiry", Convert.ToBase64String(encryptData(tb_cardexpiry.Text.Trim())));
+                            //cmd.Parameters.AddWithValue(); // profile url
+
                             cmd.Connection = con;
                             /*con.Open();
                             cmd.ExecuteNonQuery();

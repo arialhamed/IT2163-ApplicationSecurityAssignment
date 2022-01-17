@@ -46,6 +46,7 @@
                     <asp:Label Text="Email: " runat="server" Width="150px"/>
                     <asp:TextBox ID="tb_email" runat="server" Width="200px"/>
                 </div>
+                <small>Your email will be used as ID reference, hence you will not be able to change it in the future</small>
             </div>
             <div class="form-group">
                 <div class="col-sm-10">

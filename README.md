@@ -19,3 +19,11 @@ Visual Studio 2019
 
 #### Update 1.0.2
 * Updated README.md
+
+#### Update 1.0.3
+* Added sql file to a Database Folder
+    * Might consider moving that file somewhere else more secure
+* Added more to Registration server-side code
+    * DOB and card details
+    * Changed Email to be ID
+
