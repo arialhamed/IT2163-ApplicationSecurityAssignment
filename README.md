@@ -27,3 +27,27 @@ Visual Studio 2019
     * DOB and card details
     * Changed Email to be ID
 
+#### Update 1.0.4
+* Updated Login
+    * Added Login via Email & Password textboxes
+    * Not including captcha yet
+* Updated Registration
+    * Changed from using Width so much to using table with boostrap
+    * Major edits to server-side code
+* Issues
+    * Probably existing error in checkPassword function in Registration
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

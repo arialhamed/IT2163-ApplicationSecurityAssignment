@@ -27,7 +27,7 @@ namespace IT2163_ApplicationSecurityAssignment
         {
 
         }
-        private string checkPassword(string password)
+        private bool checkPassword(string password)
         {
             bool[] score = new bool[5];
 
@@ -46,43 +46,29 @@ namespace IT2163_ApplicationSecurityAssignment
             if (Regex.IsMatch(password, "[0-9]")) { score[3] = true; status += "Password must contain at least 1 number.<br/>"; }
             if (Regex.IsMatch(password, "[\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]")) { score[4] = true; status += "Password must contain special characters.<br/>"; }
 
-
-            return status;
-        }
-
-        protected void btn_checkPassword_Click(object sender, EventArgs e)
-        {
-            //bool[] scores = checkPassword(tb_password.Text);
-            //bool maxScoreFalse = false;
-            string status = checkPassword(tb_password.Text);
-            if(status != "")
+            if (status != "")
             {
                 lbl_pwdchecker.Text = status;
                 lbl_pwdchecker.ForeColor = Color.Red;
+                return false;
             }
             else
             {
                 lbl_pwdchecker.Text = "All set! Password is strong.";
                 lbl_pwdchecker.ForeColor = Color.Green;
+                return true;
             }
 
-            /*foreach (bool score in scores) { if (!score) { maxScoreFalse = true; } }
-            
-            if (maxScoreFalse) {
-                lbl_pwdchecker.Text = status;
-                lbl_pwdchecker.ForeColor = Color.Red; 
-                
-            } else
-            {
-                lbl_pwdchecker.Text = "All set! Password is strong.";
-                lbl_pwdchecker.ForeColor = Color.Green;
-            }
-*/
-            return;
+            //return status;
         }
-        protected void btn_Submit_Click(object sender, EventArgs e)
+        protected void btn_register_Click(object sender, EventArgs e)
         {
+            if (!checkPassword(tb_password.Text))
+            {
+                return;
+            }
             string pwd = tb_password.Text.ToString().Trim(); ;
+            
 
             //Generate random "salt" 
             RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();

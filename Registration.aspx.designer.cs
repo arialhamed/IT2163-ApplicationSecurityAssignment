@@ -132,12 +132,12 @@ namespace IT2163_ApplicationSecurityAssignment
         protected global::System.Web.UI.WebControls.TextBox tb_cardexpiry;
 
         /// <summary>
-        /// btn_checkPassword control.
+        /// btn_register control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_checkPassword;
+        protected global::System.Web.UI.WebControls.Button btn_register;
     }
 }
