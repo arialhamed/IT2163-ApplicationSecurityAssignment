@@ -16,7 +16,7 @@ namespace IT2163_ApplicationSecurityAssignment
 {
     public partial class Registration : System.Web.UI.Page
     {
-        string MYDBConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MYDBConnection"].ConnectionString;
+        string ASDBConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ASDBConnection"].ConnectionString;
         static string finalHash;
         static string salt;
         byte[] Key;
@@ -40,11 +40,11 @@ namespace IT2163_ApplicationSecurityAssignment
 
 
 
-            if (password.Length >= 12) { score[0] = true; status += "Password must be at least 12 characters long.<br/>"; }
-            if (Regex.IsMatch(password, "[a-z]")) { score[1] = true; status += "Password must contain lowercase characters.<br/>"; }
-            if (Regex.IsMatch(password, "[A-Z]")) { score[2] = true; status += "Password must contain uppercase characters.<br/>"; }
-            if (Regex.IsMatch(password, "[0-9]")) { score[3] = true; status += "Password must contain at least 1 number.<br/>"; }
-            if (Regex.IsMatch(password, "[\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]")) { score[4] = true; status += "Password must contain special characters.<br/>"; }
+            if (password.Length <= 12) { status += "Password must be at least 12 characters long.<br/>"; }
+            if (!Regex.IsMatch(password, "[a-z]")) { status += "Password must contain lowercase characters.<br/>"; }
+            if (!Regex.IsMatch(password, "[A-Z]")) { status += "Password must contain uppercase characters.<br/>"; }
+            if (!Regex.IsMatch(password, "[0-9]")) { status += "Password must contain at least 1 number.<br/>"; }
+            if (!Regex.IsMatch(password, "[\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E]")) { status += "Password must contain special characters.<br/>"; }
 
             if (status != "")
             {
@@ -63,7 +63,7 @@ namespace IT2163_ApplicationSecurityAssignment
         }
         protected void btn_register_Click(object sender, EventArgs e)
         {
-            if (!checkPassword(tb_password.Text))
+            if (!checkPassword(tb_password.Text.ToString()))
             {
                 return;
             }
@@ -95,40 +95,43 @@ namespace IT2163_ApplicationSecurityAssignment
             IV = cipher.IV;
 
 
-            createAccount();
+            if (createAccount())
+            {
+                Response.Redirect(string.Format("ServerText.aspx?head={0}&body={1}", "Success!", "A link will be sent to your email, click on it to confirm your email. You may also close this tab."));
+            }
         }
 
 
-        protected void createAccount()
+        protected bool createAccount()
         {
 
             try
             {
-                using (SqlConnection con = new SqlConnection(MYDBConnectionString))
+                using (SqlConnection con = new SqlConnection(ASDBConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Account VALUES(@Email, @Mobile,@Nric,@PasswordHash,@PasswordSalt,@DateTimeRegistered,@MobileVerified,@EmailVerified,@IV,@Key)"))
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Accounts VALUES(@Email, @FirstName, @LastName, @Mobile, @Nric, @PasswordHash, @PasswordSalt, @DateTimeRegistered, @MobileVerified, @EmailVerified, @IV, @Key, @DOB, @CardNumber, @CardCV, @CardExpiry, @ProfileURL)"))
                     //using (SqlCommand cmd = new SqlCommand("INSERT INTO Account VALUES(@Email, @Mobile,@Nric,@PasswordHash,@PasswordSalt,@DateTimeRegistered,@MobileVerified,@EmailVerified)"))
                     {
                         using (SqlDataAdapter sda = new SqlDataAdapter())
                         {
                             cmd.CommandType = CommandType.Text;
-                            cmd.Parameters.AddWithValue("@Email", tb_email.Text.Trim());
-                            cmd.Parameters.AddWithValue("@FirstName", tb_firstName);
-                            cmd.Parameters.AddWithValue("@LastName", tb_lastName);
-                            cmd.Parameters.AddWithValue("@Mobile", tb_mobile.Text.Trim());
-                            cmd.Parameters.AddWithValue("@Nric", Convert.ToBase64String(encryptData(tb_nric.Text.Trim())));
-                            cmd.Parameters.AddWithValue("@PasswordHash", finalHash);
-                            cmd.Parameters.AddWithValue("@PasswordSalt", salt);
-                            cmd.Parameters.AddWithValue("@DateTimeRegistered", DateTime.Now);
-                            cmd.Parameters.AddWithValue("@MobileVerified", DBNull.Value);
-                            cmd.Parameters.AddWithValue("@EmailVerified", DBNull.Value);
-                            cmd.Parameters.AddWithValue("@IV", Convert.ToBase64String(IV));
-                            cmd.Parameters.AddWithValue("@Key", Convert.ToBase64String(Key));
-                            cmd.Parameters.AddWithValue("@DOB", tb_dob.Text.Trim());
-                            cmd.Parameters.AddWithValue("@CardNumber", Convert.ToBase64String(encryptData(tb_cardnumber.Text.Trim())));
-                            cmd.Parameters.AddWithValue("@CardCV", Convert.ToBase64String(encryptData(tb_cardcv.Text.Trim())));
-                            cmd.Parameters.AddWithValue("@CardExpiry", Convert.ToBase64String(encryptData(tb_cardexpiry.Text.Trim())));
-                            //cmd.Parameters.AddWithValue(); // profile url
+                            cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = tb_email.Text.Trim();
+                            cmd.Parameters.Add("@FirstName", SqlDbType.NVarChar).Value = tb_firstName.Text.Trim();
+                            cmd.Parameters.Add("@LastName", SqlDbType.NVarChar).Value = tb_lastName.Text.Trim();
+                            cmd.Parameters.Add("@Mobile", SqlDbType.NVarChar).Value = tb_mobile.Text.Trim();
+                            cmd.Parameters.Add("@Nric", SqlDbType.NVarChar).Value = Convert.ToBase64String(encryptData(tb_nric.Text.Trim()));
+                            cmd.Parameters.Add("@PasswordHash", SqlDbType.NVarChar).Value = finalHash;
+                            cmd.Parameters.Add("@PasswordSalt", SqlDbType.NVarChar).Value = salt;
+                            cmd.Parameters.Add("@DateTimeRegistered", SqlDbType.DateTime2).Value = DateTime.Parse(DateTime.Now.ToString().Trim());
+                            cmd.Parameters.Add("@MobileVerified", SqlDbType.NChar).Value = DBNull.Value;
+                            cmd.Parameters.Add("@EmailVerified", SqlDbType.NChar).Value = DBNull.Value;
+                            cmd.Parameters.Add("@IV", SqlDbType.NVarChar).Value = Convert.ToBase64String(IV);
+                            cmd.Parameters.Add("@Key", SqlDbType.NVarChar).Value = Convert.ToBase64String(Key);
+                            cmd.Parameters.Add("@DOB", SqlDbType.NVarChar).Value = tb_dob.Text.Trim();
+                            cmd.Parameters.Add("@CardNumber", SqlDbType.NVarChar).Value = Convert.ToBase64String(encryptData(tb_cardnumber.Text.Trim()));
+                            cmd.Parameters.Add("@CardCV", SqlDbType.NVarChar).Value = Convert.ToBase64String(encryptData(tb_cardcv.Text.Trim()));
+                            cmd.Parameters.Add("@CardExpiry", SqlDbType.NVarChar).Value = Convert.ToBase64String(encryptData(tb_cardexpiry.Text.Trim()));
+                            cmd.Parameters.Add("@ProfileURL", SqlDbType.NVarChar).Value = "";
 
                             cmd.Connection = con;
                             /*con.Open();
@@ -154,11 +157,12 @@ namespace IT2163_ApplicationSecurityAssignment
                     }
                 }
 
-
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.ToString());
+                throw new Exception(ex.ToString()); // delete when not in production
+                return false;
             }
         }
 

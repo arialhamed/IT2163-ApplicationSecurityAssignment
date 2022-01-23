@@ -67,9 +67,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\ASDB.mdf" />
+    <Content Include="App_Data\ASDB_log.ldf">
+      <DependentUpon>ASDB.mdf</DependentUpon>
+    </Content>
+    <Content Include="App_Data\dbo.Accounts.sql" />
     <Content Include="Database\dbo.Account.sql" />
     <Content Include="Login.aspx" />
     <Content Include="Registration.aspx" />
+    <Content Include="ServerText.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +94,13 @@
     <Compile Include="Registration.aspx.designer.cs">
       <DependentUpon>Registration.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ServerText.aspx.cs">
+      <DependentUpon>ServerText.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ServerText.aspx.designer.cs">
+      <DependentUpon>ServerText.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -100,7 +113,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="static\" />
   </ItemGroup>
   <PropertyGroup>

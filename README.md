@@ -37,7 +37,21 @@ Visual Studio 2019
 * Issues
     * Probably existing error in checkPassword function in Registration
 
-
+#### Update 1.1.0
+* Major changes
+    * Changed mdf location
+        * From Local SQL
+        * To App_Data file in repo
+        * Change is inherited from Practical 7
+    * Database changes
+        * I gave up and replaced almost everything into string, cuz nah, i can't deal with that whole datetime bs anymore
+    * Fixes to Registration.aspx
+        * With database fix, registration is now functional
+    * Added ServerText
+        * Used as a generic text feeder for users
+* Current issues
+    * Registration.aspx
+        * Validation for length isn't auto checked by client-side javascript
 
 
 
