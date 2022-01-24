@@ -64,6 +64,11 @@ Visual Studio 2019
 * ServerText
     * Added meta tag to redirect to login (for now)
 
+#### Update 1.1.1b
+* Designer cs update
+    * These updates may be common, as the local repo is edited on an NTFS usb drive, and I do move around time to time with this laptop in my bag, but i also don't want to damage the usb drive. so here it is i guess.
+
+
 
 
 
