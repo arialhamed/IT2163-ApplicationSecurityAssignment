@@ -14,7 +14,7 @@
             var newstr = "";
             var maxScoreFalse = false;
 
-            if (str.length < 8) { newstr += "Password must be at least 12 characters long.<br/>"; maxScoreFalse = true; }
+            if (str.length < 12) { newstr += "Password must be at least 12 characters long.<br/>"; maxScoreFalse = true; }
             if (str.search(/[a-z]/) == -1) { newstr += "Password require lowercase characters.<br/>"; maxScoreFalse = true; }
             if (str.search(/[A-Z]/) == -1) { newstr += "Password require uppercase characters.<br/>"; maxScoreFalse = true; }
             if (str.search(/[0-9]/) == -1) { newstr += "Password require at least 1 number.<br/>"; maxScoreFalse = true; }
@@ -28,12 +28,15 @@
                 document.getElementById("lbl_pwdchecker").style.color = "Green";
             }
         }
+
+        
     </script>
+    <script src ="https://www.google.com/recaptcha/api.js?render=6LfGcDIeAAAAAFkstlP8uamypJkwzuGczX7jvHkP"></script>
 </head>
 <body>
     <form id="form1" runat="server" class="form-horizontal">
         <fieldset>
-            <legend>Registration</legend>
+            <legend style="font-size:40px">Registration</legend>
             <table class="table table-borderless">
                 <tr>
                     <td><asp:Label Text="Name: " runat="server"/></td>
@@ -69,7 +72,7 @@
         </fieldset>
 
         <fieldset>
-            <legend>Credit Card Information</legend>
+            <legend style="font-size:25px;">Credit Card Information</legend>
             <table class="table table-borderless">
                 <tr>
                     <td><asp:Label Text="Card Number: " runat="server" for="tb_cardnumber"/></td>
@@ -83,7 +86,7 @@
             </table>
         </fieldset>
         <fieldset>
-            <legend>Profile picture</legend>
+            <legend style="font-size:25px;">Profile picture</legend>
             <div class="form-group">
                 <div class="col-sm-10">
                     <asp:Label Text="Photo: " runat="server" for="tb_photo"/>
@@ -91,9 +94,22 @@
                 </div>
             </div>
         </fieldset>
+        <!--fieldset>
+            <legend style="font-size:25px;">Captcha</legend>
+            <div class="g-recaptcha" data-sitekey="6LfGcDIeAAAAAFkstlP8uamypJkwzuGczX7jvHkP"></div>
+        </fieldset-->
+            <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response" />
         <div class="form-group">
             <asp:Button Text="Register" runat="server" ID="btn_register" OnClick="btn_register_Click" Width="360px"/>
         </div>
     </form>
+
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute("6LfGcDIeAAAAAFkstlP8uamypJkwzuGczX7jvHkP", { action: 'Login' }).then(function (token) {
+                document.getElementById("g-recaptcha-response").value = token;
+            });
+        });
+    </script>
 </body>
 </html>

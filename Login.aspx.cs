@@ -9,7 +9,7 @@ namespace IT2163_ApplicationSecurityAssignment
 {
     public partial class Login : System.Web.UI.Page
     {
-        string MYDBConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["MYDBConnection"].ConnectionString;
+        string ASDBConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ASDBConnection"].ConnectionString;
         static string finalHash;
         static string salt;
         byte[] Key;

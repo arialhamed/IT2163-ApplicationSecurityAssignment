@@ -53,8 +53,16 @@ Visual Studio 2019
     * Registration.aspx
         * Validation for length isn't auto checked by client-side javascript
 
-
-
+#### Update 1.1.1
+* UI
+    * Minor aesthetic update
+        * Increased font size for some words for readability
+            * Registration
+            * ServerText
+* Added reCAPTCHA v3 into Registration
+    * lads and geens, the captcha is functional.
+* ServerText
+    * Added meta tag to redirect to login (for now)
 
 
 

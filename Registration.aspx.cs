@@ -11,6 +11,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
+using System.Net;
+using System.IO;
+using System.Web.Script.Serialization;
+using System.Web.Services;
 
 namespace IT2163_ApplicationSecurityAssignment
 {
@@ -23,6 +27,12 @@ namespace IT2163_ApplicationSecurityAssignment
         byte[] IV;
 
         static string line = "\r";
+
+        public class CaptchaSuccessObject
+        {
+            public string success { get; set; }
+            public List<string> ErrorMessage { get; set; }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -40,7 +50,7 @@ namespace IT2163_ApplicationSecurityAssignment
 
 
 
-            if (password.Length <= 12) { status += "Password must be at least 12 characters long.<br/>"; }
+            if (password.Length < 12) { status += "Password must be at least 12 characters long.<br/>"; }
             if (!Regex.IsMatch(password, "[a-z]")) { status += "Password must contain lowercase characters.<br/>"; }
             if (!Regex.IsMatch(password, "[A-Z]")) { status += "Password must contain uppercase characters.<br/>"; }
             if (!Regex.IsMatch(password, "[0-9]")) { status += "Password must contain at least 1 number.<br/>"; }
@@ -68,36 +78,40 @@ namespace IT2163_ApplicationSecurityAssignment
                 return;
             }
             string pwd = tb_password.Text.ToString().Trim(); ;
-            
 
-            //Generate random "salt" 
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-            byte[] saltByte = new byte[8];
-
-            //Fills array of bytes with a cryptographically strong sequence of random values.
-            rng.GetBytes(saltByte);
-            salt = Convert.ToBase64String(saltByte);
-
-            SHA512Managed hashing = new SHA512Managed();
-
-            string pwdWithSalt = pwd + salt;
-            byte[] plainHash = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwd));
-            byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
-
-            finalHash = Convert.ToBase64String(hashWithSalt);
-
-            /*lb_error1.Text = "Salt:" + salt;
-            lb_error2.Text = "Hash with salt:" + finalHash;
-*/
-            RijndaelManaged cipher = new RijndaelManaged();
-            cipher.GenerateKey();
-            Key = cipher.Key;
-            IV = cipher.IV;
-
-
-            if (createAccount())
+            if (ValidateCaptcha())
             {
-                Response.Redirect(string.Format("ServerText.aspx?head={0}&body={1}", "Success!", "A link will be sent to your email, click on it to confirm your email. You may also close this tab."));
+                //Generate random "salt" 
+                RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+                byte[] saltByte = new byte[8];
+
+                //Fills array of bytes with a cryptographically strong sequence of random values.
+                rng.GetBytes(saltByte);
+                salt = Convert.ToBase64String(saltByte);
+
+                SHA512Managed hashing = new SHA512Managed();
+
+                string pwdWithSalt = pwd + salt;
+                byte[] plainHash = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwd));
+                byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
+
+                finalHash = Convert.ToBase64String(hashWithSalt);
+
+                RijndaelManaged cipher = new RijndaelManaged();
+                cipher.GenerateKey();
+                Key = cipher.Key;
+                IV = cipher.IV;
+
+                var headString = "";
+                var bodyString = "";
+                if (createAccount())
+                {
+                    Response.Redirect(string.Format("ServerText.aspx?head={0}&body={1}", "Success!", "A link will be sent to your email, click on it to confirm your email. You may also close this tab."));
+                }
+                else
+                {
+
+                }
             }
         }
 
@@ -193,6 +207,29 @@ namespace IT2163_ApplicationSecurityAssignment
 
             finally { }
             return cipherText;
+        }
+        protected bool ValidateCaptcha()
+        {
+            bool result = true;
+            string captchaResponse = Request.Form["g-recaptcha-response"];
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=6LfGcDIeAAAAAInUDDMPS3IAZPuUtnrsK-cyNtJy&response=" + captchaResponse);
+            try
+            {
+                using (WebResponse wResponse = req.GetResponse())
+                {
+                    using (StreamReader readStream = new StreamReader(wResponse.GetResponseStream()))
+                    {
+                        string jsonResponse = readStream.ReadToEnd();
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        CaptchaSuccessObject jsonObject = js.Deserialize<CaptchaSuccessObject>(jsonResponse);
+                        result = Convert.ToBoolean(jsonObject.success);
+                    }
+                }
+                return result;
+            } catch (WebException ex)
+            {
+                throw ex;
+            }
         }
     }
 }
