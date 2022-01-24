@@ -68,7 +68,8 @@ Visual Studio 2019
 * Designer cs update
     * These updates may be common, as the local repo is edited on an NTFS usb drive, and I do move around time to time with this laptop in my bag, but i also don't want to damage the usb drive. so here it is i guess.
 
-
+#### Update 1.1.1c
+* Update csproj to stop showing something that doesn't exist, like a reference to the lyrics of I Miss You by Blink 182.
 
 
 

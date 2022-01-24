@@ -72,7 +72,6 @@
       <DependentUpon>ASDB.mdf</DependentUpon>
     </Content>
     <Content Include="App_Data\dbo.Accounts.sql" />
-    <Content Include="Database\dbo.Account.sql" />
     <Content Include="Login.aspx" />
     <Content Include="Registration.aspx" />
     <Content Include="ServerText.aspx" />
