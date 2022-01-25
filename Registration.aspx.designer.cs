@@ -51,6 +51,33 @@ namespace IT2163_ApplicationSecurityAssignment
         protected global::System.Web.UI.WebControls.TextBox tb_email;
 
         /// <summary>
+        /// btn_send_verify control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_send_verify;
+
+        /// <summary>
+        /// tb_verify_email control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tb_verify_email;
+
+        /// <summary>
+        /// btn_verify_email control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_verify_email;
+
+        /// <summary>
         /// tb_password control.
         /// </summary>
         /// <remarks>

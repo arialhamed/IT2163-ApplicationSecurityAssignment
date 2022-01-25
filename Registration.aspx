@@ -45,7 +45,17 @@
                 </tr>
                 <tr>
                     <td><asp:Label Text="Email: " runat="server"/></td>
-                    <td colspan="2"><asp:TextBox ID="tb_email" runat="server"/></td>
+                    <td><asp:TextBox ID="tb_email" runat="server"/></td>
+                    <td>
+                        <table id="table_verify">
+                            <tr>
+                                <td><asp:Button Text="Send code" runat="server" ID="btn_send_verify" Width="70px" OnClick="btn_send_verify_Click" /></td>
+                                <td><asp:TextBox runat="server" ID="tb_verify_email" Width="63px" Visible="false"/></td>
+                                <td><asp:Button Text="Verify" runat="server" ID="btn_verify_email" Width="70px" OnClick="btn_verify_email_Click" Visible="false"/></td>
+                            </tr>
+                        </table>
+                        <asp:Label Text="Email is verified!" runat="server" Visible="false"/>
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="3"><small>Your email will be used as your ID, hence you will not be able to change it in the future</small></td>

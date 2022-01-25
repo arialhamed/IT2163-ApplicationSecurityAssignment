@@ -5,6 +5,17 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+using System.Text.RegularExpressions;
+using System.Drawing;
+using System.Security.Cryptography;
+using System.Text;
+using System.Data.SqlClient;
+using System.Data;
+using System.Net;
+using System.IO;
+using System.Web.Script.Serialization;
+using System.Web.Services;
+
 namespace IT2163_ApplicationSecurityAssignment
 {
     public partial class Login : System.Web.UI.Page
@@ -16,6 +27,12 @@ namespace IT2163_ApplicationSecurityAssignment
         byte[] IV;
 
         static string line = "/r";
+
+        public class CaptchaSuccessObject
+        {
+            public string success { get; set; }
+            public List<string> ErrorMessage { get; set; }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -23,7 +40,143 @@ namespace IT2163_ApplicationSecurityAssignment
 
         protected void btn_login_Click(object sender, EventArgs e)
         {
+            if (ValidateCaptcha())
+            {
+                string email = tb_email.Text.ToString().Trim();
+                string passw = tb_password.Text.ToString().Trim();
 
+                SHA512Managed hashing = new SHA512Managed();
+                string dbHash = getDBHash(email);
+                string dbSalt = getDBSalt(email);
+
+                try
+                {
+                    if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
+                    {
+                        string pwdWithSalt = passw + dbSalt;
+                        byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
+                        string userHash = Convert.ToBase64String(hashWithSalt);
+                        
+                        if (userHash.Equals(dbHash)){
+                            Session["LoggedIn"] = tb_email.Text.Trim();
+
+                            string guid = Guid.NewGuid().ToString();
+                            Session["AuthToken"] = guid;
+
+                            Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                            Response.Redirect("Home.aspx", false);
+                        } else
+                        {
+                            lbl_error.Text = "Email or Password is not valid. Please try again.";
+                            Response.Redirect("Login.aspx", false);
+                        }
+                    }
+                } catch (Exception ex)
+                {
+                    throw new Exception(ex.ToString());
+                } finally { }
+                
+                
+                
+
+            } else
+            {
+                lbl_error.Text = "Your Captcha is invalid, please try again";
+            }
+        }
+        protected bool ValidateCaptcha()
+        {
+            bool result = true;
+            string captchaResponse = Request.Form["g-recaptcha-response"];
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=6LfGcDIeAAAAAInUDDMPS3IAZPuUtnrsK-cyNtJy&response=" + captchaResponse);
+            try
+            {
+                using (WebResponse wResponse = req.GetResponse())
+                {
+                    using (StreamReader readStream = new StreamReader(wResponse.GetResponseStream()))
+                    {
+                        string jsonResponse = readStream.ReadToEnd();
+                        JavaScriptSerializer js = new JavaScriptSerializer();
+                        CaptchaSuccessObject jsonObject = js.Deserialize<CaptchaSuccessObject>(jsonResponse);
+                        result = Convert.ToBoolean(jsonObject.success);
+                    }
+                }
+                return result;
+            }
+            catch (WebException ex)
+            {
+                throw ex;
+            }
+        }
+
+        protected void btn_register_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Registration.aspx", false);
+        }
+
+        protected string getDBSalt(string email)
+        {
+            string s = null;
+            SqlConnection connection = new SqlConnection(ASDBConnectionString);
+            string sql = "select PASSWORDSALT FROM ACCOUNTS WHERE Email=@EMAIL";
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@EMAIL", email);
+
+            try
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader["PASSWORDSALT"] != null)
+                        {
+                            if (reader["PASSWORDSALT"] != DBNull.Value)
+                            {
+                                s = reader["PASSWORDSALT"].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+            finally { connection.Close(); }
+            return s;
+        }
+        protected string getDBHash(string email)
+        {
+            string s = null;
+            SqlConnection connection = new SqlConnection(ASDBConnectionString);
+            string sql = "select PASSWORDHASH FROM ACCOUNTS WHERE Email=@EMAIL";
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@EMAIL", email);
+
+            try
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader["PASSWORDHASH"] != null)
+                        {
+                            if (reader["PASSWORDHASH"] != DBNull.Value)
+                            {
+                                s = reader["PASSWORDHASH"].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+            finally { connection.Close(); }
+            return s;
         }
     }
 }

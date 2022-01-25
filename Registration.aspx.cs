@@ -12,6 +12,7 @@ using System.Text;
 using System.Data.SqlClient;
 using System.Data;
 using System.Net;
+using System.Net.Mail;
 using System.IO;
 using System.Web.Script.Serialization;
 using System.Web.Services;
@@ -26,6 +27,9 @@ namespace IT2163_ApplicationSecurityAssignment
         byte[] Key;
         byte[] IV;
 
+        private readonly Random rnd = new Random();
+        static string verify_email;
+        
         static string line = "\r";
 
         public class CaptchaSuccessObject
@@ -35,6 +39,7 @@ namespace IT2163_ApplicationSecurityAssignment
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+            verify_email = rnd.Next(100000, 999999).ToString();
 
         }
         private bool checkPassword(string password)
@@ -230,6 +235,63 @@ namespace IT2163_ApplicationSecurityAssignment
             {
                 throw ex;
             }
+        }
+        protected bool ValidateEmail(string inemail)
+        {
+            bool result = true;
+            string checkaddress;
+            try
+            {
+                checkaddress = new MailAddress(inemail).Address;
+            } catch (FormatException)
+            {
+                result = false;
+            }
+            return result;
+        }
+        // send the verify_email
+        protected void btn_send_verify_Click(object sender, EventArgs e)
+        {
+            if (ValidateEmail(tb_email.Text.ToString()))
+            {
+                string to = tb_email.Text.ToString(); //To address    
+                string from = "morphball420@gmail.com"; //From address    
+                MailMessage message = new MailMessage(from, to);
+
+                string mailbody = "Verification code: " + verify_email + "<br><br>Use this code in the Registration page.";
+                message.Subject = "SITConnect Registration: Email verification code";
+                message.Body = mailbody;
+                message.BodyEncoding = Encoding.UTF8;
+                message.IsBodyHtml = true;
+                SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
+/*                System.Net.NetworkCredential basicCredential1 = new
+                System.Net.NetworkCredential(from, "keueryknpfjhhdde");*/
+                client.EnableSsl = true;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(from, "keueryknpfjhhdde");
+                try
+                {
+                    client.Send(message);
+                    tb_verify_email.Visible = true;
+                    btn_verify_email.Visible = true;
+                }
+
+                catch (Exception ex)
+                {
+                    
+                    throw ex;
+                }
+
+            } else
+            {
+
+            }
+        }
+
+        // check if both the user type in and the verify_email are the same
+        protected void btn_verify_email_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

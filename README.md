@@ -71,6 +71,32 @@ Visual Studio 2019
 #### Update 1.1.1c
 * Update csproj to stop showing something that doesn't exist, like a reference to the lyrics of I Miss You by Blink 182.
 
+#### Update 1.1.2
+* Login
+    * Added in captcha v3 derived from registration
+    * Updated TextMode for the password field to Password
+    * Updated functional login (with hash and salt). 
+        * Basic login successful!
+    * Added email verification fields (NOT FUNCTIONAL YET)
+* Home
+    * Created as home page to change stuff
+* Error page
+    * Defaults all errors to that page (pls enable in demo)
+* Current issues/future fixes
+    * Validations
+        * Verify email in registration, possibly with SMTP
+    * Account lockout after 3 failures
+    * Audit log
+    * Implement SQLi and XSS prevention
+    * Account policies
+        * Automatic account recovery after x minutes of lockout
+        * Avoid password reuse (max 2 password history)
+        * Change password
+        * Minimum and maximum password age (cannot change password within x minutes form the last change of password and must change password after x minutes
+    * Github checking thingy
+    * Add in db modification in Home
+
+
 
 
 
