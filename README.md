@@ -96,6 +96,15 @@ Visual Studio 2019
     * Github checking thingy
     * Add in db modification in Home
 
+#### Update 1.1.2b
+* Minor warm-up update
+    * Started to work on functionality on these
+        * Account lockout
+            * Login.aspx.cs:77
+        * Photo upload
+            * Registration.aspx.cs:189
+    * Changed accounts table values (and deleted pre-exisiting data)
+        * Added "Lockout"
 
 
 

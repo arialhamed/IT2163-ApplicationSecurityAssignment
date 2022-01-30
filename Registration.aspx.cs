@@ -128,7 +128,7 @@ namespace IT2163_ApplicationSecurityAssignment
             {
                 using (SqlConnection con = new SqlConnection(ASDBConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Accounts VALUES(@Email, @FirstName, @LastName, @Mobile, @Nric, @PasswordHash, @PasswordSalt, @DateTimeRegistered, @MobileVerified, @EmailVerified, @IV, @Key, @DOB, @CardNumber, @CardCV, @CardExpiry, @ProfileURL)"))
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Accounts VALUES(@Email, @FirstName, @LastName, @Mobile, @Nric, @PasswordHash, @PasswordSalt, @DateTimeRegistered, @MobileVerified, @EmailVerified, @IV, @Key, @DOB, @CardNumber, @CardCV, @CardExpiry, @ProfileURL, @Lockout)"))
                     //using (SqlCommand cmd = new SqlCommand("INSERT INTO Account VALUES(@Email, @Mobile,@Nric,@PasswordHash,@PasswordSalt,@DateTimeRegistered,@MobileVerified,@EmailVerified)"))
                     {
                         using (SqlDataAdapter sda = new SqlDataAdapter())
@@ -151,6 +151,7 @@ namespace IT2163_ApplicationSecurityAssignment
                             cmd.Parameters.Add("@CardCV", SqlDbType.NVarChar).Value = Convert.ToBase64String(encryptData(tb_cardcv.Text.Trim()));
                             cmd.Parameters.Add("@CardExpiry", SqlDbType.NVarChar).Value = Convert.ToBase64String(encryptData(tb_cardexpiry.Text.Trim()));
                             cmd.Parameters.Add("@ProfileURL", SqlDbType.NVarChar).Value = "";
+                            cmd.Parameters.Add("@Lockout", SqlDbType.NVarChar).Value = "0";
 
                             cmd.Connection = con;
                             /*con.Open();
@@ -182,6 +183,40 @@ namespace IT2163_ApplicationSecurityAssignment
             {
                 throw new Exception(ex.ToString()); // delete when not in production
                 return false;
+            }
+        }
+
+        protected void uploadFile()
+        {
+            string strFileName;
+            string strFilePath;
+            string strFolder;
+            strFolder = Server.MapPath("./App_Data/");
+            // Get the name of the file that is posted.
+            strFileName = oFile.PostedFile.FileName;
+            strFileName = Path.GetFileName(strFileName);
+            if (oFile.Value != "")
+            {
+                // Create the directory if it does not exist.
+                if (!Directory.Exists(strFolder))
+                {
+                    Directory.CreateDirectory(strFolder);
+                }
+                // Save the uploaded file to the server.
+                strFilePath = strFolder + strFileName;
+                if (File.Exists(strFilePath))
+                {
+                    lbl_photo_error.Text = strFileName + " already exists on the server!";
+                }
+                else
+                {
+                    oFile.PostedFile.SaveAs(strFilePath);
+                    lbl_photo_error.Text = strFileName + " has been successfully uploaded.";
+                }
+            }
+            else
+            {
+                //lblUploadResult.Text = "Click 'Browse' to select the file to upload.";
             }
         }
 

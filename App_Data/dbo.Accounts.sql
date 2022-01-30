@@ -7,16 +7,17 @@
     [Nric]               NVARCHAR (MAX) NULL,
     [PasswordHash]       NVARCHAR (MAX) NULL,
     [PasswordSalt]       NVARCHAR (MAX) NULL,
-    [DateTimeRegistered] NVARCHAR(MAX)  NOT NULL,
+    [DateTimeRegistered] NVARCHAR (MAX) NOT NULL,
     [MobileVerified]     NCHAR (2)      NULL,
     [EmailVerified]      NCHAR (2)      NULL,
     [IV]                 NVARCHAR (MAX) NULL,
     [Key]                NVARCHAR (MAX) NULL,
-    [DOB]                NVARCHAR(MAX)  NULL,
+    [DOB]                NVARCHAR (MAX) NULL,
     [CardNumber]         NVARCHAR (MAX) NULL,
     [CardCV]             NVARCHAR (MAX) NULL,
-    [CardExpiry]         NVARCHAR(MAX)  NULL,
+    [CardExpiry]         NVARCHAR (MAX) NULL,
     [ProfileURL]         NVARCHAR (MAX) NULL,
+    [Lockout]			 NVARCHAR (MAX) NULL, 
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
