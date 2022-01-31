@@ -17,7 +17,8 @@
     [CardCV]             NVARCHAR (MAX) NULL,
     [CardExpiry]         NVARCHAR (MAX) NULL,
     [ProfileURL]         NVARCHAR (MAX) NULL,
-    [Lockout]			 NVARCHAR (MAX) NULL, 
+    [Lockout]            NVARCHAR (MAX) NULL,
+    [LockoutRecoveryDateTime] NVARCHAR(MAX) NULL, 
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

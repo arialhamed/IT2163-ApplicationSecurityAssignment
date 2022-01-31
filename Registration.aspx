@@ -34,7 +34,7 @@
     <script src ="https://www.google.com/recaptcha/api.js?render=6LfGcDIeAAAAAFkstlP8uamypJkwzuGczX7jvHkP"></script>
 </head>
 <body>
-    <form id="form1" runat="server" class="form-horizontal">
+    <form id="form1" runat="server" class="form-horizontal" enctype="multipart/form-data">
         <fieldset>
             <legend style="font-size:40px">Registration</legend>
             <table class="table table-borderless">
@@ -54,7 +54,7 @@
                                 <td><asp:Button Text="Verify" runat="server" ID="btn_verify_email" Width="70px" OnClick="btn_verify_email_Click" Visible="false"/></td>
                             </tr>
                         </table>
-                        <asp:Label Text="Email is verified!" runat="server" Visible="false"/>
+                        <asp:Label ID="lbl_verify_email" Text=" " runat="server" Visible="false"/>
                     </td>
                 </tr>
                 <tr>
@@ -99,8 +99,10 @@
             <legend style="font-size:25px;">Profile picture</legend>
             <div class="form-group">
                 <div class="col-sm-10">
-                    <asp:Label Text="Photo: " runat="server" for="tb_photo"/>
-                    <input type="file" name="tb_photo" id="tb_photo" value="" />
+                    <asp:Label Text="Photo: " runat="server" for="oFile"/>
+                    <input id="oFile" type="file" name="oFile" runat="server"/>
+                    
+                    <asp:Label ID="lbl_photo_error" Text=" " runat="server" />
                 </div>
             </div>
         </fieldset>

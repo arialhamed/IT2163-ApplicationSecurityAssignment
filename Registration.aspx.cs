@@ -128,7 +128,7 @@ namespace IT2163_ApplicationSecurityAssignment
             {
                 using (SqlConnection con = new SqlConnection(ASDBConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Accounts VALUES(@Email, @FirstName, @LastName, @Mobile, @Nric, @PasswordHash, @PasswordSalt, @DateTimeRegistered, @MobileVerified, @EmailVerified, @IV, @Key, @DOB, @CardNumber, @CardCV, @CardExpiry, @ProfileURL, @Lockout)"))
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Accounts VALUES(@Email, @FirstName, @LastName, @Mobile, @Nric, @PasswordHash, @PasswordSalt, @DateTimeRegistered, @MobileVerified, @EmailVerified, @IV, @Key, @DOB, @CardNumber, @CardCV, @CardExpiry, @ProfileURL, @Lockout, @LockoutRecoveryDateTime)"))
                     //using (SqlCommand cmd = new SqlCommand("INSERT INTO Account VALUES(@Email, @Mobile,@Nric,@PasswordHash,@PasswordSalt,@DateTimeRegistered,@MobileVerified,@EmailVerified)"))
                     {
                         using (SqlDataAdapter sda = new SqlDataAdapter())
@@ -142,7 +142,13 @@ namespace IT2163_ApplicationSecurityAssignment
                             cmd.Parameters.Add("@PasswordHash", SqlDbType.NVarChar).Value = finalHash;
                             cmd.Parameters.Add("@PasswordSalt", SqlDbType.NVarChar).Value = salt;
                             cmd.Parameters.Add("@DateTimeRegistered", SqlDbType.DateTime2).Value = DateTime.Parse(DateTime.Now.ToString().Trim());
-                            cmd.Parameters.Add("@MobileVerified", SqlDbType.NChar).Value = DBNull.Value;
+                            if (verify_email == "VERIFIED")
+                            {
+                                cmd.Parameters.Add("@MobileVerified", SqlDbType.NChar).Value = "1";
+                            } else
+                            {
+                                cmd.Parameters.Add("@MobileVerified", SqlDbType.NChar).Value = DBNull.Value;
+                            }
                             cmd.Parameters.Add("@EmailVerified", SqlDbType.NChar).Value = DBNull.Value;
                             cmd.Parameters.Add("@IV", SqlDbType.NVarChar).Value = Convert.ToBase64String(IV);
                             cmd.Parameters.Add("@Key", SqlDbType.NVarChar).Value = Convert.ToBase64String(Key);
@@ -150,8 +156,10 @@ namespace IT2163_ApplicationSecurityAssignment
                             cmd.Parameters.Add("@CardNumber", SqlDbType.NVarChar).Value = Convert.ToBase64String(encryptData(tb_cardnumber.Text.Trim()));
                             cmd.Parameters.Add("@CardCV", SqlDbType.NVarChar).Value = Convert.ToBase64String(encryptData(tb_cardcv.Text.Trim()));
                             cmd.Parameters.Add("@CardExpiry", SqlDbType.NVarChar).Value = Convert.ToBase64String(encryptData(tb_cardexpiry.Text.Trim()));
-                            cmd.Parameters.Add("@ProfileURL", SqlDbType.NVarChar).Value = "";
-                            cmd.Parameters.Add("@Lockout", SqlDbType.NVarChar).Value = "0";
+                            // Triggers saving of file to directory
+                            cmd.Parameters.Add("@ProfileURL", SqlDbType.NVarChar).Value = uploadFile();
+                            cmd.Parameters.Add("@Lockout", SqlDbType.NVarChar).Value = DBNull.Value;
+                            cmd.Parameters.Add("@LockoutRecoveryDateTime", SqlDbType.NVarChar).Value = DBNull.Value;
 
                             cmd.Connection = con;
                             /*con.Open();
@@ -186,12 +194,12 @@ namespace IT2163_ApplicationSecurityAssignment
             }
         }
 
-        protected void uploadFile()
+        protected string uploadFile()
         {
             string strFileName;
-            string strFilePath;
+            string strFilePath = "";
             string strFolder;
-            strFolder = Server.MapPath("./App_Data/");
+            strFolder = Server.MapPath("./static/" + tb_email.Text.ToString().Trim() + "/");
             // Get the name of the file that is posted.
             strFileName = oFile.PostedFile.FileName;
             strFileName = Path.GetFileName(strFileName);
@@ -218,6 +226,7 @@ namespace IT2163_ApplicationSecurityAssignment
             {
                 //lblUploadResult.Text = "Click 'Browse' to select the file to upload.";
             }
+            return "https://" + Request.Url.Authority + "/static/"+ tb_email.Text.ToString().Trim() + "/" + strFileName;
         }
 
         protected byte[] encryptData(string data)
@@ -287,7 +296,7 @@ namespace IT2163_ApplicationSecurityAssignment
         // send the verify_email
         protected void btn_send_verify_Click(object sender, EventArgs e)
         {
-            if (ValidateEmail(tb_email.Text.ToString()))
+            /*if (ValidateEmail(tb_email.Text.ToString()))
             {
                 string to = tb_email.Text.ToString(); //To address    
                 string from = "morphball420@gmail.com"; //From address    
@@ -299,8 +308,8 @@ namespace IT2163_ApplicationSecurityAssignment
                 message.BodyEncoding = Encoding.UTF8;
                 message.IsBodyHtml = true;
                 SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
-/*                System.Net.NetworkCredential basicCredential1 = new
-                System.Net.NetworkCredential(from, "keueryknpfjhhdde");*/
+*//*                System.Net.NetworkCredential basicCredential1 = new
+                System.Net.NetworkCredential(from, "keueryknpfjhhdde");*//*
                 client.EnableSsl = true;
                 client.UseDefaultCredentials = false;
                 client.Credentials = new NetworkCredential(from, "keueryknpfjhhdde");
@@ -320,13 +329,51 @@ namespace IT2163_ApplicationSecurityAssignment
             } else
             {
 
+            }*/
+            string inEmail = tb_email.Text.ToString().Trim();
+            if (ValidateEmail(inEmail))
+            {
+                MailMessage mail = new MailMessage();
+                mail.To.Add(inEmail);
+                //mail.To.Add("Another Email ID where you wanna send same email");
+                mail.From = new MailAddress("stotlefake@gmail.com");
+                mail.Subject = "SITConnect: Email Verification";
+
+                string Body = "You have requested to verify your email" +
+                              "Verification Code: " + verify_email;
+                mail.Body = Body;
+
+                mail.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient();
+                smtp.Host = "smtp.gmail.com"; //Or Your SMTP Server Address
+                smtp.Credentials = new System.Net.NetworkCredential
+                     ("stotlefake@gmail.com", "iymhgkzhczaawstr"); // password is based off App Passwords from accounts.google.com security
+                smtp.EnableSsl = true;
+                try
+                {
+                    smtp.Send(mail);
+                    tb_verify_email.Visible = true;
+                    btn_verify_email.Visible = true;
+                    //lbl_verify_email.Text = "";
+                } catch (Exception ex)
+                {
+                    lbl_verify_email.Text = "Error occured when sending verification email. You may verify your email after creating account";
+                }
+                // this button would not work for the time being
             }
         }
 
         // check if both the user type in and the verify_email are the same
         protected void btn_verify_email_Click(object sender, EventArgs e)
         {
-
+            if (tb_verify_email.Text.ToString().Trim() == verify_email)
+            {
+                btn_send_verify.Visible = false;
+                tb_verify_email.Visible = false;
+                btn_verify_email.Visible = false;
+                lbl_verify_email.Text = "Email has been verified!";
+                verify_email = "VERIFIED";
+            }
         }
     }
 }

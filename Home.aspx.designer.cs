@@ -33,6 +33,15 @@ namespace IT2163_ApplicationSecurityAssignment
         protected global::System.Web.UI.WebControls.Label lbl_body1;
 
         /// <summary>
+        /// showPhoto control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image showPhoto;
+
+        /// <summary>
         /// btn_logout control.
         /// </summary>
         /// <remarks>

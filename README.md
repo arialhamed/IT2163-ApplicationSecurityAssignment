@@ -3,7 +3,12 @@ Admin no.: 201922D \
 Name: Muhammad Arif Bin Hamed \
 Module group no.: 07
 
+This project uses the following NuGet packages
+* Microsoft.CodeDom.Providers.DotNetCompilerPlatform
+* Newtonsoft.Json
+* SendGrid
 
+Latest version is found at the lowest point of this readme.md
 
 ## Changelog
 #### Update 1.0.0
@@ -106,8 +111,13 @@ Visual Studio 2019
     * Changed accounts table values (and deleted pre-exisiting data)
         * Added "Lockout"
 
-
-
+#### Update 1.1.3
+* Photo upload and display is fully functional
+    * Save photos to distint directories, named by email, which are inside static folder, which is set it gitignore file
+* Added LockoutRecoveryDateTime value to account db (getting tired of this)
+* Finally installed SendGrid, intend to use SendGrid instead of using SMTP
+* ..and i give up on the whole notification thing. gosh.
+* Unless not required, this repo would receive one last update after this. 30% here we goooooo
 
 
 

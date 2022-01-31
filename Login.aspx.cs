@@ -26,6 +26,8 @@ namespace IT2163_ApplicationSecurityAssignment
         byte[] Key;
         byte[] IV;
 
+        static int loginAttempts;
+
         static string line = "/r";
 
         public class CaptchaSuccessObject
@@ -35,7 +37,8 @@ namespace IT2163_ApplicationSecurityAssignment
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            //Session["Attempts"] = 0;
+            loginAttempts = 0;
         }
 
         protected void btn_login_Click(object sender, EventArgs e)
@@ -69,6 +72,49 @@ namespace IT2163_ApplicationSecurityAssignment
                         {
                             lbl_error.Text = "Email or Password is not valid. Please try again.";
                             Response.Redirect("Login.aspx", false);
+                        }
+                    } else
+                    {
+                        if (loginAttempts <= 3)
+                        {
+                            loginAttempts += 1;
+                        }
+                        else
+                        {
+                            using (SqlConnection con = new SqlConnection(ASDBConnectionString))
+                            {
+                                using (SqlCommand cmd = new SqlCommand("UPDATE FROM Accounts SET Lockout = 1 WHERE Email = @Email"))
+                                {
+                                    using (SqlDataAdapter sda = new SqlDataAdapter())
+                                    {
+                                        cmd.CommandType = CommandType.Text;
+                                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = tb_email.Text.Trim();
+                                        cmd.Connection = con;
+
+                                        try
+                                        {
+                                            con.Open();
+                                            cmd.ExecuteNonQuery();
+
+                                            // Line below should never run, it would show that that account exists
+                                            //lbl_error.Text = "Account " + tb_email.Text.Trim() + " has been locked.";
+
+                                            // Send notification to email that this email has been locked
+                                            //EMAIL
+                                        } catch (Exception ex)
+                                        {
+                                            //throw new Exception(ex.ToString());
+                                            // not much to do here
+                                        } finally
+                                        {
+                                            con.Close();
+
+                                            // Reset value just in case they meant to log in to a different email
+                                            loginAttempts = 0;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 } catch (Exception ex)

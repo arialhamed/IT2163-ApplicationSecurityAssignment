@@ -5,11 +5,15 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Drawing;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace IT2163_ApplicationSecurityAssignment
 {
     public partial class Home : System.Web.UI.Page
     {
+        string ASDBConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ASDBConnection"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["LoggedIn"] != null && Session["AuthToken"] != null && Request.Cookies["AuthToken"] != null)
@@ -22,6 +26,43 @@ namespace IT2163_ApplicationSecurityAssignment
                     lbl_body1.Text = "You are signed in as " + Session["LoggedIn"];
                     lbl_body1.ForeColor = Color.Green;
                     btn_logout.Visible = true;
+                    // to get photo url
+                    try
+                    {
+                        using (SqlConnection con = new SqlConnection(ASDBConnectionString))
+                        {
+                            using (SqlCommand cmd = new SqlCommand("SELECT ProfileURL FROM Accounts WHERE Email = @Email"))
+                            {
+                                using (SqlDataAdapter sda = new SqlDataAdapter())
+                                {
+                                    cmd.CommandType = CommandType.Text;
+                                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Session["LoggedIn"];
+                                    cmd.Connection = con;
+                                    con.Open();
+                                    SqlDataReader nwReader = cmd.ExecuteReader();
+                                    try
+                                    {
+                                        while (nwReader.Read())
+                                        {
+                                            // Somehow, this works
+                                            showPhoto.ImageUrl = (string)nwReader["ProfileURL"];
+                                        }
+                                    } catch (Exception ex)
+                                    {
+                                        // heh
+                                    }
+                                    finally
+                                    {
+                                        nwReader.Close();
+                                        con.Close();
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception ex)
+                    {
+
+                    }
                 }
             } else
             {

@@ -78,6 +78,15 @@ namespace IT2163_ApplicationSecurityAssignment
         protected global::System.Web.UI.WebControls.Button btn_verify_email;
 
         /// <summary>
+        /// lbl_verify_email control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_verify_email;
+
+        /// <summary>
         /// tb_password control.
         /// </summary>
         /// <remarks>
@@ -157,6 +166,15 @@ namespace IT2163_ApplicationSecurityAssignment
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tb_cardexpiry;
+
+        /// <summary>
+        /// oFile control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputFile oFile;
 
         /// <summary>
         /// lbl_photo_error control.
