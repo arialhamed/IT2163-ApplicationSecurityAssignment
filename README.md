@@ -8,7 +8,7 @@ This project uses the following NuGet packages
 * Newtonsoft.Json
 * SendGrid (email function doesn't work)
 
-Last update: [Update 1.1.4](#update-114)
+Last update: [Update 1.1.4](#update-114-post-demo)
 
 ## Changelog
 #### Update 1.0.0
@@ -133,5 +133,5 @@ Visual Studio 2019
         * Refer back to IT2163 Practicals
         * don't
 * Until further notice, this repository will become public until my death, or this account's death
-    * In the meantime, check out my [itch.io page](arifstocrat.itch.io), it doesn't have anything much as of this push.
+    * In the meantime, check out my [itch.io page](https://arifstocrat.itch.io), it doesn't have anything much as of this push.
 
