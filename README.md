@@ -6,9 +6,9 @@ Module group no.: 07
 This project uses the following NuGet packages
 * Microsoft.CodeDom.Providers.DotNetCompilerPlatform
 * Newtonsoft.Json
-* SendGrid
+* SendGrid (email function doesn't work)
 
-Latest version is found at the lowest point of this readme.md
+Last update: [Update 1.1.4](#update-114)
 
 ## Changelog
 #### Update 1.0.0
@@ -119,8 +119,19 @@ Visual Studio 2019
 * ..and i give up on the whole notification thing. gosh.
 * Unless not required, this repo would receive one last update after this. 30% here we goooooo
 
+#### Update 1.1.3b (Staged)
+* MDF upload (don't do this, im just asianing)
 
-
-
-
+#### Update 1.1.4 (Post-demo)
+* Enabled and beefed up web.config so that it handles known errors obtainable by previously unknown methods.
+* Removed reCAPTCHA secret keys
+    * Removed from Login.aspx.cs & Registration.aspx.cs
+    * To get the key, get access from [here](https://docs.google.com/document/d/1NRtJtsKDAIhXXeJESxyMo1fGHl-ljPmdHpIF9k3Pe4I/edit)
+* reCAPTCHA client keys will remain, but may or may not be functional in the distant future.
+* Note for future Arif:
+    * If anything here doesn't work, either do these:
+        * Refer back to IT2163 Practicals
+        * don't
+* Until further notice, this repository will become public until my death, or this account's death
+    * In the meantime, check out my [itch.io page](arifstocrat.itch.io), it doesn't have anything much as of this push.
 

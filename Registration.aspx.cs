@@ -261,7 +261,11 @@ namespace IT2163_ApplicationSecurityAssignment
         {
             bool result = true;
             string captchaResponse = Request.Form["g-recaptcha-response"];
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=6LfGcDIeAAAAAInUDDMPS3IAZPuUtnrsK-cyNtJy&response=" + captchaResponse);
+            // Key obtainable from https://docs.google.com/document/d/1NRtJtsKDAIhXXeJESxyMo1fGHl-ljPmdHpIF9k3Pe4I/edit
+            // the document is set to private, so you need arifhamed to grant access 
+            // Take the string of text and add it into SECRET_KEY below
+            string SECRET_KEY = "";
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=" + SECRET_KEY + "&response=" + captchaResponse);
             try
             {
                 using (WebResponse wResponse = req.GetResponse())
